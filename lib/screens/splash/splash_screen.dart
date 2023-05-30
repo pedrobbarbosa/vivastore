@@ -22,24 +22,24 @@ class SplashScreen extends StatelessWidget {
           Center(
             child: Image(
               image: AssetImage('assets/images/logo.png'),
-              width: 125,
-              height: 125,
+              width: 250,
+              height: 250,
             ),
           ),
           SizedBox(height: 30),
-          Container(
-            color: Colors.black,
-            padding: const EdgeInsets.symmetric(
-              vertical: 10,
-              horizontal: 20,
-            ),
-            child: Text(
-              'Zero To Unicorn',
-              style: Theme.of(context).textTheme.headline2!.copyWith(
-                    color: Colors.white,
-                  ),
-            ),
-          )
+          // Container(
+          //   color: Colors.black,
+          //   padding: const EdgeInsets.symmetric(
+          //     vertical: 10,
+          //     horizontal: 20,
+          //   ),
+          //   child: Text(
+          //     'Viva Store',
+          //     style: Theme.of(context).textTheme.headline2!.copyWith(
+          //           color: Colors.white,
+          //         ),
+          //   ),
+          // )
         ],
       ),
     );

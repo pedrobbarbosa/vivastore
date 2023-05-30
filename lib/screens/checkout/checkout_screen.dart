@@ -1,9 +1,11 @@
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_ecommerce_app/blocs/checkout/checkout_bloc.dart';
 import 'package:flutter_ecommerce_app/widgets/widgets.dart';
 
-class CheckoutScreen extends StatelessWidget {
+class CheckoutScreen extends StatefulWidget {
   static const String routeName = '/checkout';
 
   static Route route() {
@@ -14,110 +16,172 @@ class CheckoutScreen extends StatelessWidget {
   }
 
   @override
+  _CheckoutScreenState createState() => _CheckoutScreenState();
+}
+
+class _CheckoutScreenState extends State<CheckoutScreen> {
+  final TextEditingController _cepController = TextEditingController();
+  String? _address;
+  String? _shippingPrice;
+
+  Color hexToColor(String code) {
+    return Color(int.parse(code.substring(1, 7), radix: 16) + 0xFF000000);
+  }
+
+  Future<String?> _searchAddress(String cep) async {
+    final response =
+        await http.get(Uri.parse('https://viacep.com.br/ws/$cep/json/'));
+
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body);
+      final address = data['logradouro'] +
+          ', ' +
+          data['bairro'] +
+          ', ' +
+          data['localidade'] +
+          ' - ' +
+          data['uf'];
+      return address;
+    } else {
+      return null;
+    }
+  }
+
+  Future<String?> _calculateShippingPrice(String cep) async {
+    // Chamar a API dos Correios para obter o preço estimado do frete
+    // Substitua a chamada abaixo pela lógica de chamada à API dos Correios
+    final double price = 15.90;
+
+    return 'R\$ ${price.toStringAsFixed(2)}';
+  }
+
+  void _updateAddressAndPrice() async {
+    final address =
+        await _searchAddress(_cepController.text.trim().replaceAll('-', ''));
+    final price = await _calculateShippingPrice(
+        _cepController.text.trim().replaceAll('-', ''));
+
+    setState(() {
+      _address = address;
+      _shippingPrice = price;
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CustomAppBar(title: 'Checkout'),
-      bottomNavigationBar: CustomNavBar(screen: routeName),
+      appBar: CustomAppBar(
+        title: 'Confira',
+      ),
+      bottomNavigationBar: CustomNavBar(screen: CheckoutScreen.routeName),
       body: Padding(
         padding: const EdgeInsets.all(20.0),
-        child: BlocBuilder<CheckoutBloc, CheckoutState>(
-          builder: (context, state) {
-            if (state is CheckoutLoading) {
-              return Center(
-                child: CircularProgressIndicator(),
-              );
-            }
-            if (state is CheckoutLoaded) {
-              return Column(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'CUSTOMER INFORMATION',
-                    style: Theme.of(context).textTheme.headline3,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'Informações do cliente',
+              style: Theme.of(context).textTheme.headline3,
+            ),
+            _buildTextFormField((value) {
+              context.read<CheckoutBloc>().add(UpdateCheckout(email: value));
+            }, context, 'Email'),
+            _buildTextFormField((value) {
+              context.read<CheckoutBloc>().add(UpdateCheckout(fullName: value));
+            }, context, 'Nome completo'),
+            SizedBox(height: 20),
+            Text(
+              'Informações da entrega',
+              style: Theme.of(context).textTheme.headline3,
+            ),
+            _buildTextFormField((value) {
+              context.read<CheckoutBloc>().add(UpdateCheckout(address: value));
+            }, context, 'Endereço'),
+            _buildTextFormField((value) {
+              context.read<CheckoutBloc>().add(UpdateCheckout(city: value));
+            }, context, 'Cidade'),
+            _buildTextFormField((value) {
+              context.read<CheckoutBloc>().add(UpdateCheckout(country: value));
+            }, context, 'País'),
+            Row(
+              children: [
+                SizedBox(
+                  width: 75,
+                  child: Text(
+                    'CEP',
+                    style: Theme.of(context).textTheme.bodyText1,
                   ),
-                  _buildTextFormField((value) {
-                    context
-                        .read<CheckoutBloc>()
-                        .add(UpdateCheckout(email: value));
-                  }, context, 'Email'),
-                  _buildTextFormField((value) {
-                    context
-                        .read<CheckoutBloc>()
-                        .add(UpdateCheckout(fullName: value));
-                  }, context, 'Full Name'),
-                  SizedBox(height: 20),
-                  Text(
-                    'DELIVERY INFORMATION',
-                    style: Theme.of(context).textTheme.headline3,
-                  ),
-                  _buildTextFormField((value) {
-                    context
-                        .read<CheckoutBloc>()
-                        .add(UpdateCheckout(address: value));
-                  }, context, 'Address'),
-                  _buildTextFormField((value) {
-                    context
-                        .read<CheckoutBloc>()
-                        .add(UpdateCheckout(city: value));
-                  }, context, 'City'),
-                  _buildTextFormField((value) {
-                    context
-                        .read<CheckoutBloc>()
-                        .add(UpdateCheckout(country: value));
-                  }, context, 'Country'),
-                  _buildTextFormField((value) {
-                    context
-                        .read<CheckoutBloc>()
-                        .add(UpdateCheckout(zipCode: value));
-                  }, context, 'ZIP Code'),
-                  SizedBox(height: 20),
-                  Container(
-                    width: MediaQuery.of(context).size.width,
-                    height: 60,
-                    alignment: Alignment.bottomCenter,
-                    decoration: BoxDecoration(color: Colors.black),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: [
-                        Center(
-                          child: Text(
-                            'SELECT A PAYMENT METHOD',
-                            style: Theme.of(context)
-                                .textTheme
-                                .headline3!
-                                .copyWith(color: Colors.white),
-                          ),
-                        ),
-                        IconButton(
-                          onPressed: () {},
-                          icon: Icon(
-                            Icons.arrow_forward,
-                            color: Colors.white,
-                          ),
-                        )
-                      ],
+                ),
+                Expanded(
+                  child: TextFormField(
+                    controller: _cepController,
+                    keyboardType: TextInputType.number,
+                    decoration: InputDecoration(
+                      isDense: true,
+                      contentPadding: const EdgeInsets.only(left: 10),
+                      focusedBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(color: Colors.black),
+                      ),
                     ),
                   ),
-                  SizedBox(height: 20),
-                  Text(
-                    'ORDER SUMMARY',
-                    style: Theme.of(context).textTheme.headline3,
+                ),
+                // put something here to make the button break to a new line
+                SizedBox(width: 10),
+                ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    primary: hexToColor('#EB690A'),
+                    shape: RoundedRectangleBorder(),
+                    elevation: 0,
                   ),
-                  OrderSummary()
+                  onPressed: _updateAddressAndPrice,
+                  child: Text('Calcular Frete'),
+                ),
+              ],
+            ),
+            if (_address != null)
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  SizedBox(height: 16.0),
+                  Text(
+                    'Endereço de entrega:',
+                    style: TextStyle(
+                      fontSize: 16.0,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  Text(_address!),
+                  if (_shippingPrice != null)
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        SizedBox(height: 16.0),
+                        Text(
+                          'Preço estimado do frete:',
+                          style: TextStyle(
+                            fontSize: 16.0,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        Text(_shippingPrice!),
+                      ],
+                    ),
                 ],
-              );
-            } else {
-              return Text('Something went wrong');
-            }
-          },
+              ),
+            SizedBox(height: 20),
+            Text(
+              'Resumo da compra',
+              style: Theme.of(context).textTheme.headline3,
+            ),
+            OrderSummary(),
+          ],
         ),
       ),
     );
   }
 
   Padding _buildTextFormField(
-    Function(String)? onChanged,
+    Function(String) onChanged,
     BuildContext context,
     String labelText,
   ) {

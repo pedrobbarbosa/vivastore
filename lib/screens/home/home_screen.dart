@@ -23,7 +23,7 @@ class HomeScreen extends StatelessWidget {
       onWillPop: () async => false,
       child: Scaffold(
         appBar: CustomAppBar(
-          title: 'Zero To Unicorn',
+          title: 'Viva Store',
           automaticallyImplyLeading: false,
         ),
         bottomNavigationBar: CustomNavBar(screen: routeName),
@@ -49,11 +49,11 @@ class HomeScreen extends StatelessWidget {
                         .toList(),
                   );
                 } else {
-                  return Text('Something went wrong.');
+                  return Text('Algo deu errado.');
                 }
               },
             ),
-            SectionTitle(title: 'RECOMMENDED'),
+            SectionTitle(title: 'Recomendações'),
             BlocBuilder<ProductBloc, ProductState>(
               builder: (context, state) {
                 if (state is ProductLoading) {
@@ -68,11 +68,11 @@ class HomeScreen extends StatelessWidget {
                         .toList(),
                   );
                 } else {
-                  return Text('Something went wrong.');
+                  return Text('Algo ocorreu errado.');
                 }
               },
             ),
-            SectionTitle(title: 'MOST POPULAR'),
+            SectionTitle(title: 'Mais populares'),
             BlocBuilder<ProductBloc, ProductState>(
               builder: (context, state) {
                 if (state is ProductLoading) {
@@ -87,7 +87,7 @@ class HomeScreen extends StatelessWidget {
                         .toList(),
                   );
                 } else {
-                  return Text('Something went wrong.');
+                  return Text('Algo ocorreu errado.');
                 }
               },
             ),

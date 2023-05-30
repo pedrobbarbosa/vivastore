@@ -13,10 +13,14 @@ class CartScreen extends StatelessWidget {
     );
   }
 
+  Color hexToColor(String code) {
+    return Color(int.parse(code.substring(1, 7), radix: 16) + 0xFF000000);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CustomAppBar(title: 'Cart'),
+      appBar: CustomAppBar(title: 'Carrinho'),
       bottomNavigationBar: CustomNavBar(screen: routeName),
       body: BlocBuilder<CartBloc, CartState>(
         builder: (context, state) {
@@ -41,12 +45,12 @@ class CartScreen extends StatelessWidget {
                           Navigator.pushNamed(context, '/');
                         },
                         style: ElevatedButton.styleFrom(
-                          primary: Colors.black,
+                          backgroundColor: hexToColor('#EB690A'),
                           shape: RoundedRectangleBorder(),
                           elevation: 0,
                         ),
                         child: Text(
-                          'Add More Items',
+                          'Adicionar mais itens',
                           style: Theme.of(context)
                               .textTheme
                               .headline5!
@@ -81,7 +85,7 @@ class CartScreen extends StatelessWidget {
               ),
             );
           }
-          return Text('Something went wrong');
+          return Text('Alguma coisa deu errado.');
         },
       ),
     );

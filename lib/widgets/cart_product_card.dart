@@ -10,6 +10,10 @@ class CartProductCard extends StatelessWidget {
     required this.quantity,
   }) : super(key: key);
 
+  Color hexToColor(String code) {
+    return Color(int.parse(code.substring(1, 7), radix: 16) + 0xFF000000);
+  }
+
   final Product product;
   final int quantity;
 
@@ -53,6 +57,7 @@ class CartProductCard extends StatelessWidget {
                   children: [
                     IconButton(
                       icon: Icon(Icons.remove_circle),
+                      color: Colors.redAccent,
                       onPressed: () {
                         context.read<CartBloc>().add(
                               CartProductRemoved(product),
@@ -65,6 +70,7 @@ class CartProductCard extends StatelessWidget {
                     ),
                     IconButton(
                       icon: Icon(Icons.add_circle),
+                      color: hexToColor('#EB690A'),
                       onPressed: () {
                         context.read<CartBloc>().add(
                               CartProductAdded(product),

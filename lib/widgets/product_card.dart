@@ -58,10 +58,10 @@ class ProductCard extends StatelessWidget {
               height: 70,
               alignment: Alignment.bottomCenter,
               decoration: BoxDecoration(
-                color: Colors.black,
+                color: Colors.transparent,
               ),
               child: Padding(
-                padding: const EdgeInsets.all(8.0),
+                padding: const EdgeInsets.all(4.0),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -94,7 +94,7 @@ class ProductCard extends StatelessWidget {
                           ),
                           onPressed: () {
                             final snackBar = SnackBar(
-                              content: Text('Added to your Cart!'),
+                              content: Text('Adicionado ao carrinho!'),
                             );
                             ScaffoldMessenger.of(context)
                                 .showSnackBar(snackBar);
@@ -113,8 +113,7 @@ class ProductCard extends StatelessWidget {
                                 ),
                                 onPressed: () {
                                   final snackBar = SnackBar(
-                                    content:
-                                        Text('Removed from your Wishlist!'),
+                                    content: Text('Removido do carrinho'),
                                   );
                                   ScaffoldMessenger.of(context)
                                       .showSnackBar(snackBar);

@@ -15,10 +15,14 @@ class CustomNavBar extends StatelessWidget {
     this.product,
   }) : super(key: key);
 
+  Color hexToColor(String code) {
+    return Color(int.parse(code.substring(1, 7), radix: 16) + 0xFF000000);
+  }
+
   @override
   Widget build(BuildContext context) {
     return BottomAppBar(
-      color: Colors.black,
+      color: hexToColor('#EB690A'),
       child: Container(
         height: 70,
         child: Row(
@@ -114,12 +118,12 @@ class CustomNavBar extends StatelessWidget {
                 shape: RoundedRectangleBorder(),
               ),
               child: Text(
-                'ADD TO CART',
+                'Adicionar ao carrinho',
                 style: Theme.of(context).textTheme.headline3,
               ),
             );
           }
-          return Text('Something went wrong!');
+          return Text('Algo deu errado!');
         },
       )
     ];
@@ -136,7 +140,7 @@ class CustomNavBar extends StatelessWidget {
           shape: RoundedRectangleBorder(),
         ),
         child: Text(
-          'GO TO CHECKOUT',
+          'Finalizar Compra',
           style: Theme.of(context).textTheme.headline3,
         ),
       )
@@ -164,7 +168,7 @@ class CustomNavBar extends StatelessWidget {
                 shape: RoundedRectangleBorder(),
               ),
               child: Text(
-                'ORDER NOW',
+                'Peça agora',
                 style: Theme.of(context).textTheme.headline3,
               ),
             );

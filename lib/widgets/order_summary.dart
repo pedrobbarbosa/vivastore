@@ -7,6 +7,10 @@ class OrderSummary extends StatelessWidget {
     Key? key,
   }) : super(key: key);
 
+  Color hexToColor(String code) {
+    return Color(int.parse(code.substring(1, 7), radix: 16) + 0xFF000000);
+  }
+
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<CartBloc, CartState>(
@@ -21,7 +25,7 @@ class OrderSummary extends StatelessWidget {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text('SUBTOTAL',
+                    Text('Subtotal',
                         style: Theme.of(context).textTheme.headline5),
                     Text('\$${state.cart.subtotalString}',
                         style: Theme.of(context).textTheme.headline5),
@@ -34,7 +38,7 @@ class OrderSummary extends StatelessWidget {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text('DELIVERY FEE',
+                    Text('Taxa de entrega',
                         style: Theme.of(context).textTheme.headline5),
                     Text('\$${state.cart.deliveryFeeString}',
                         style: Theme.of(context).textTheme.headline5),
@@ -49,7 +53,7 @@ class OrderSummary extends StatelessWidget {
                     height: 60,
                     alignment: Alignment.bottomCenter,
                     decoration: BoxDecoration(
-                      color: Colors.black.withAlpha(50),
+                      color: hexToColor('#EB690A'),
                     ),
                   ),
                   Container(
@@ -57,7 +61,7 @@ class OrderSummary extends StatelessWidget {
                     width: MediaQuery.of(context).size.width - 10,
                     height: 50,
                     decoration: BoxDecoration(
-                      color: Colors.black,
+                      color: hexToColor('#EB690A'),
                     ),
                     child: Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 20.0),
@@ -66,7 +70,7 @@ class OrderSummary extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           Text(
-                            'TOTAL',
+                            'Total',
                             style: Theme.of(context)
                                 .textTheme
                                 .headline5!
@@ -88,7 +92,7 @@ class OrderSummary extends StatelessWidget {
             ],
           );
         } else {
-          return Text('Something went wrong.');
+          return Text('Algo deu errado.');
         }
       },
     );

@@ -13,6 +13,10 @@ class ProductScreen extends StatelessWidget {
     );
   }
 
+  Color hexToColor(String code) {
+    return Color(int.parse(code.substring(1, 7), radix: 16) + 0xFF000000);
+  }
+
   final Product product;
 
   const ProductScreen({
@@ -54,7 +58,7 @@ class ProductScreen extends StatelessWidget {
                       width: MediaQuery.of(context).size.width - 10,
                       height: 50,
                       decoration: BoxDecoration(
-                        color: Colors.black,
+                        color: hexToColor('#EB690A'),
                       ),
                       child: Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 20.0),
@@ -85,7 +89,7 @@ class ProductScreen extends StatelessWidget {
                 ExpansionTile(
                   initiallyExpanded: true,
                   title: Text(
-                    "Product Information",
+                    "Informações do produto",
                     style: Theme.of(context).textTheme.headline3,
                   ),
                   children: <Widget>[
@@ -99,13 +103,13 @@ class ProductScreen extends StatelessWidget {
                 ),
                 ExpansionTile(
                   title: Text(
-                    "Delivery Information",
+                    "Informações de entrega",
                     style: Theme.of(context).textTheme.headline3,
                   ),
                   children: <Widget>[
                     ListTile(
                       title: Text(
-                        'At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate non provident, similique sunt in culpa qui officia deserunt mollitia animi, id est laborum et dolorum fuga.',
+                        'Frete gratis a partir de R\$ 30,00. Entrega em ate 7 dias uteis',
                         style: Theme.of(context).textTheme.bodyText1,
                       ),
                     )
